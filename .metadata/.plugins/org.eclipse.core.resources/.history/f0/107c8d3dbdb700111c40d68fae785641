@@ -1,0 +1,16 @@
+package com.game.logic;
+
+import java.util.TimerTask;
+
+import com.game.Game;
+
+public class Task4Timer extends TimerTask {
+	   public void run() {
+	       long millis = System.currentTimeMillis() - startTime;
+	       int seconds = (int) (millis / 1000);
+	       int minutes = seconds / 60;
+	       seconds     = seconds % 60;
+
+	       timeLabel.setText(String.format("%d:%02d", minutes, seconds));
+	   }
+}

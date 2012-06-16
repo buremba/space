@@ -23,8 +23,8 @@ public class World {
 		for(int i=0; i<playerCount; i++)
 		{
 			float der=(float) Math.toRadians(i*derFark);
-			float posx=(float) (dim.x/2+Math.cos(der)*(dim.x-dim.x*70/100)-63);
-			float posy=(float) (dim.y/2+Math.sin(der)*(dim.y-dim.y*70/100)-57);
+			float posx=(float) (dim.x/2+Math.cos(der)*(dim.x-dim.x*70/100+50)-63);
+			float posy=(float) (dim.y/2+Math.sin(der)*(dim.y-dim.y*70/100+50)-57);
 			ImageElement ie=new ImageElement(new Vector2(posx,posy),new Vector2(63,57),new TextureRegion(texture,0,130,127,114));
 			ie.angle=i*derFark+180;
 			players.addObject(ie);

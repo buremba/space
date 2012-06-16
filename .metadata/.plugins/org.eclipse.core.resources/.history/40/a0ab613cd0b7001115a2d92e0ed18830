@@ -1,0 +1,32 @@
+package com.game.logic;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.game.ImageElement;
+
+public class Explode {
+	Texture texture;
+	ImageElement[] imgs=new ImageElement[25];
+	int animCursor=0;
+	public Explode(Vector2 pos,Vector2 dim)
+	{
+		texture = new Texture(Gdx.files.internal("data/explosion.png"));
+		for(int i=0; i<25; i++)
+		{
+			int x=i%5;
+			int y=((i==0||i==5)?0:(25/(i-x)));
+			imgs[i]=new ImageElement( 
+					pos,
+					dim,new TextureRegion(texture,x*64,y*64,64,64));
+		}
+	}
+	public void Draw(SpriteBatch s)
+	{
+		imgs[animCursor].Draw(s);
+		animCursor=(animCursor+1)%imgs.length;
+		System.out.println(animCursor);
+	}
+}

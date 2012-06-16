@@ -1,30 +1,43 @@
 package com.game;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputProcessor;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.game.logic.Roket;
+import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.game.logic.Explode;
 import com.game.logic.World;
 
 public class Game implements ApplicationListener,InputProcessor {
 	Texture texture;	
 	RenderList rlist;
 	SpriteBatch s;
-	ImageElement ie,roket,gezegen;
+	ImageElement ie,roket,gezegen,background;
 	Vector2 speed;
 	
 	private OrthographicCamera cam;
 	private Rectangle glViewport;
-	
+
+	private Sound rocketSound;
+	private Sound explosionSound;
+	private Music duelMusic;
+
 	// User Inputs
 	private Vector2 touchpoint;
 	Boolean touchDown=false;
@@ -32,11 +45,33 @@ public class Game implements ApplicationListener,InputProcessor {
 
 	World world;
 	int f=0;
+	
+	Timer timer1 = new Timer();
+	int roketLeftSec=10;
+	Vector3 cameraPosBackup;
+	float cameraZoomBackup;
+	
+	BitmapFont font;
+	Stage ui;
+	
+	Explode ex;
+	
+	boolean drawRoket=false;
+	class Task4Timer extends TimerTask {
+		Game game;
+		public Task4Timer(Game g)
+		{
+			game=g;
+		}
+		public void run() {
+			
+		   game.checkRoket();
+		}
+	}
 	@Override
 	public void create() {
 		Gdx.input.setInputProcessor(this);
 		texture = new Texture(Gdx.files.internal("data/sprites.png"));
-	
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		glViewport = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		touchpoint = new Vector2();
@@ -53,37 +88,151 @@ public class Game implements ApplicationListener,InputProcessor {
 		roket=new ImageElement( 
 				new Vector2(cpos.x-30,cpos.y-20),
 				new Vector2(60,40),new TextureRegion(texture,148,124,161,125));
+		roket.visible=false;
 		gezegen=new ImageElement( 
 				new Vector2(150,150),
 				new Vector2(100,100),new TextureRegion(texture,151,0,126,124));
+		background = new ImageElement(
+				new Vector2(-Gdx.graphics.getWidth()/2,-Gdx.graphics.getHeight()/2), 
+						new Vector2(Gdx.graphics.getWidth()*2,Gdx.graphics.getHeight()*2), 
+						new TextureRegion(new Texture(Gdx.files.internal("data/stars.jpg")),0,0,256,256));
 		speed=new Vector2(0,0);
+		cameraPosBackup=cam.position;
+		cameraZoomBackup=cam.zoom;
 		
+		timer1 = new Timer();
+		
+		font = new BitmapFont();
+
+		ui = new Stage(480, 320, false);
+		Label fps = new Label("fps: 0", new Label.LabelStyle(font, Color.WHITE), "fps");
+		fps.x = 10;
+		fps.y = 30;
+		fps.color.set(0, 1, 0, 1);
+		fps.scaleX=2;
+		fps.scaleY=2;
+		ui.addActor(fps);
+		loadSounds();
+		timer1.schedule(new Task4Timer(this), 0,1000);
+		
+		ex=new Explode(cpos, new Vector2(50,50));
+	}
+	private void loadSounds() {
+		rocketSound = Gdx.audio.newSound(Gdx.files.internal("data/rocketTakeOff.mp3"));
+		explosionSound = Gdx.audio.newSound(Gdx.files.internal("data/bomb.wav"));
+		duelMusic = Gdx.audio.newMusic(Gdx.files.internal("data/duelFates.mp3"));
+
+		// start the playback of the background music immediately
+		duelMusic.setLooping(true);
+		duelMusic.play();
+	}
+	public boolean stopRoket()
+	{
+		world.passPlayer();
+		ImageElement player=(ImageElement) world.getPlayer();
+		ln.setPos1(player.getCenterPos());
+		Vector2 cpos=((ImageElement)world.getPlayer()).getCenterPos();
+		ie.position=new Vector2(cpos.x-60,cpos.y-60);
+		
+		
+		cam.zoom=cameraZoomBackup;
+		cam.position.x=cpos.x;
+		cam.position.y=cpos.y;
+		roket.visible=false;
+		speed.x=0;
+		speed.y=0;
+		roket.position=gezegen.position;
+		roketLeftSec=0;
+		return true;
+	}
+	public void checkRoket()
+	{
+		if(!roket.visible) {
+			roketLeftSec=10;
+			((Label)ui.findActor("fps")).setText("Kalan Saniye : " + roketLeftSec);
+			return;
+		}
+		if(roketLeftSec>0)
+		{
+			roketLeftSec--;
+			((Label)ui.findActor("fps")).setText("Kalan Saniye : " + roketLeftSec);
+		}
+		else
+		{
+			stopRoket();
+		}
 	}
 	@Override
 	public void render() {		
 		if(Gdx.graphics.getDeltaTime()>1/30)
 		{
+			background.angle+=0.2f;
+			/// KUTLE CEKIMI
+			if(roket.visible)
+			{
+				float angle=(float) Math.atan2(speed.y, speed.x);
+				angle=(float) Math.toDegrees(angle);
+				roket.angle=angle+180;
+				roket.position.x-=speed.x;
+				roket.position.y-=speed.y;
+				float cosx=roket.position.x-gezegen.position.x;
+				float sinx=roket.position.y-gezegen.position.y;
+				float hip=(float) Math.hypot(cosx, sinx);
+				if(hip<75)
+				{
+					
+					explosionSound.play();
+					ex.setPos(roket.position);
+					drawRoket=true;
+					ex.finished=false;
+					stopRoket();
+				}
+				else if(hip>Gdx.graphics.getWidth()*2)
+				{
+					stopRoket();
+				}
+				else
+				{
+					ImageElement currentPlayer=(ImageElement)world.getPlayer();
+					for(int i=0; i<world.getPlayers().list.size(); i++)
+					{
+						ImageElement other=(ImageElement) world.getPlayers().list.get(i);
+							if(other!=currentPlayer)
+							{
+							float cosx2=other.getCenterPos().x-roket.getCenterPos().x;
+							float sinx2=other.getCenterPos().y-roket.getCenterPos().y;
+							float hip2=(float) Math.hypot(cosx2, sinx2);
+							if(hip2<50)
+							{
+								
+								explosionSound.play();
+								ex.setPos(roket.position);
+								drawRoket=true;
+								ex.finished=false;
+								world.getPlayers().list.remove(i);
+								stopRoket();	
+								
+							}
+							}
+					}
+				}
+
+				speed.x+=cosx*75/(hip*hip);
+				speed.y+=sinx*75/(hip*hip);
+			}
 			///
-			float angle=(float) Math.atan2(speed.y, speed.x);
-			angle=(float) Math.toDegrees(angle);
-			roket.angle=angle+180;
-			roket.position.x-=speed.x;
-			roket.position.y-=speed.y;
-			float cosx=roket.position.x-gezegen.position.x;
-			float sinx=roket.position.y-gezegen.position.y;
-			float hip=(float) Math.hypot(cosx, sinx);
-			speed.x+=cosx*75/(hip*hip);
-			speed.y+=sinx*75/(hip*hip);
-			///
+			// GL RENDER ADIM ÝSLEMLERÝ
 			GL10 gl = Gdx.graphics.getGL10();
 			gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 			gl.glEnable(GL10.GL_LINEAR);
 			gl.glViewport((int) glViewport.x, (int) glViewport.y, (int) glViewport.width, (int) glViewport.height);
 			cam.update();
 			cam.apply(gl);
-			
+			///
+			/// SPRITE RENDER
 			s.setProjectionMatrix(cam.combined);			
 			s.begin();
+			background.Draw(s);
 			for(int i=0; i<world.getPlayers().list.size(); i++)
 			{
 				world.getPlayers().list.get(i).Draw(s);
@@ -91,22 +240,53 @@ public class Game implements ApplicationListener,InputProcessor {
 			ie.Draw(s);
 			roket.Draw(s);
 			gezegen.Draw(s);
+			if(drawRoket)
+			{
+				ex.Draw(s);
+				if(ex.finished)
+				{
+					drawRoket=false;
+				}
+			}
+			
 			s.end();
-			float pixdf=0;
-			if(roket.position.y>Gdx.graphics.getHeight())
+			///
+			if(roket.visible)
 			{
-				pixdf=roket.position.y-400;
-				cam.zoom=1+pixdf/400;
-				cam.position.y=roket.position.y-200;
+				float pixdf=0;
+				if(roket.position.y>Gdx.graphics.getHeight())
+				{
+					pixdf=roket.position.y-Gdx.graphics.getHeight();
+					cam.zoom=1+pixdf/Gdx.graphics.getHeight();
+					cam.position.y=roket.position.y-50;
+				}
+				if(roket.position.y<0)
+				{
+					pixdf=400-roket.position.y;
+					cam.zoom=1+pixdf/Gdx.graphics.getHeight();
+					
+				}
+				if(roket.position.x>Gdx.graphics.getWidth())
+				{
+					pixdf=roket.position.y-Gdx.graphics.getWidth();
+					cam.zoom=1+pixdf/Gdx.graphics.getWidth();
+					cam.position.y=roket.position.y-50;
+				}
+				if(roket.position.x<0)
+				{
+					pixdf=Gdx.graphics.getWidth()-roket.position.x;
+					cam.zoom=1+pixdf/Gdx.graphics.getWidth();
+					
+				}
+				cam.position.x=roket.position.x;
+				cam.position.y=roket.position.y;
 			}
-			else if(roket.position.y<Gdx.graphics.getHeight())
-			{
-				pixdf=400-roket.position.y;
-				cam.zoom=1+pixdf/400;
-				cam.position.y=roket.position.y+200;
-			}
+			// CIZGI CIZIMI
 			ln.visible=touchDown;
 			ln.Draw(s);
+			//
+			
+			ui.draw();
 		}
 		Gdx.graphics.getGL10().glFlush();	
 	}
@@ -145,7 +325,7 @@ public class Game implements ApplicationListener,InputProcessor {
 		double sinx=player.position.y+player.dim.y/2-touchpoint.y;
 		angle=Math.atan2(sinx, cosx);
 		angle=angle*180/Math.PI;
-
+		
 		angle+=180;
 		player.angle=(float) angle;
 		}
@@ -175,16 +355,14 @@ public class Game implements ApplicationListener,InputProcessor {
 
 		angle+=180;
 		Vector2 cpos=((ImageElement)world.getPlayer()).getCenterPos();
+		System.out.println(cpos);
 		roket.position=new Vector2(cpos.x-30,cpos.y-20);
 		roket.angle=(float) angle;		
-		speed.x=(float) (cosx/50);
-		speed.y=(float) (sinx/50);
+		speed.x=(float) (cosx/25);
+		speed.y=(float) (sinx/25);
+		roket.visible=true;
+		rocketSound.play();
 		
-		world.passPlayer();
-		player=(ImageElement) world.getPlayer();
-		ln.setPos1(player.getCenterPos());
-		cpos=((ImageElement)world.getPlayer()).getCenterPos();
-		ie.position=new Vector2(cpos.x-60,cpos.y-60);
 		return false;
 	}
 	@Override public void resize(int arg0, int arg1) {	}
@@ -222,6 +400,8 @@ public class Game implements ApplicationListener,InputProcessor {
 	@Override public boolean keyTyped(char arg0) {return false;}
 	@Override public boolean keyUp(int arg0) {return false;}
 	@Override public boolean scrolled(int arg0) {return false;}
-	@Override public void dispose() {}
+	@Override public void dispose() {
+		timer1.cancel();
+	}
 	@Override public void pause() {}
 }

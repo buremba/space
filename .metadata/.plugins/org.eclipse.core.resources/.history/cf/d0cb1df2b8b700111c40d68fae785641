@@ -1,0 +1,18 @@
+package com.game.logic;
+
+import java.util.TimerTask;
+
+import com.game.Game;
+
+public class Task4Timer extends TimerTask {
+	Task4Timer(Game g)
+	{
+		
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

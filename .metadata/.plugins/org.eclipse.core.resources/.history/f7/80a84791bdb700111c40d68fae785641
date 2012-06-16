@@ -1,0 +1,13 @@
+package com.game.logic;
+
+import java.util.TimerTask;
+
+import com.game.Game;
+
+public class Task4Timer extends TimerTask {
+	   public void run() {
+
+
+	       System.out.println("dfsdfsd");
+	   }
+}
