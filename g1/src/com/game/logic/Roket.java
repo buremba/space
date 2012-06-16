@@ -16,7 +16,8 @@ public class Roket extends Drawable {
 	@Override
 	public void Draw(SpriteBatch s) {
 		// TODO Auto-generated method stub
-		
+		this.position.x+=hiz.x;
+		this.position.y+=hiz.y;
 		ie.Draw(s);
 	}
 }

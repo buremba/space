@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 public class RenderList {
 	ArrayList<Drawable> list;
 	SpriteBatch s;
-	RenderList()
+	public RenderList()
 	{
 		s=new SpriteBatch();
 		list=new ArrayList<Drawable>();
@@ -21,7 +21,7 @@ public class RenderList {
 	{
 		for(int i=0; i<list.size(); i++)
 		{
-			if(list.get(i).tag==tag)
+			if(list.get(i).tag.equals(tag))
 			{
 				return list.get(i);
 			}

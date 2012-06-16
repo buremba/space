@@ -1,0 +1,27 @@
+package com.game.logic;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+import com.game.Drawable;
+import com.game.ImageElement;
+
+public class Player extends Drawable {
+	ImageElement ucak,roket;
+	Line line;
+	Player(ImageElement ie){
+		this.ucak=ie;
+		ie=new ImageElement(new Vector2(100,100),new Vector2(127,114),new TextureRegion(texture,0,130,127,114));
+		ie.tag="uçak";
+	}
+	@Override
+	public void Draw(SpriteBatch s) {
+		// TODO Auto-generated method stub
+		ucak.Draw(s);
+		roket.Draw(s);
+	}
+	public void launchRocket()
+	{
+		
+	}
+}

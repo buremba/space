@@ -1,0 +1,6 @@
+package com.game.logic;
+
+public class World {
+	ArrayList<Player> players=new ArrayList<Player>();
+	World(int playerCount)
+}

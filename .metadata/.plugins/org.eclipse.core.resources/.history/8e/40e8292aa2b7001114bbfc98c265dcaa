@@ -1,0 +1,28 @@
+package com.game.logic;
+
+import java.util.ArrayList;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
+import com.game.Drawable;
+
+public class World extends Drawable {
+	ArrayList<Player> players=new ArrayList<Player>();
+	Vector2 dim;
+	World(int playerCount,Vector2 dim)
+	{
+		texture = new Texture(Gdx.files.internal("data/sprites.png"));
+		float derFark=360/playerCount;
+		for(int i=0; i<playerCount; i++)
+		{
+			
+		}
+	}
+	@Override
+	public void Draw(SpriteBatch s) {
+		// TODO Auto-generated method stub
+		
+	}
+}

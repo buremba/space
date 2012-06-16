@@ -1,0 +1,10 @@
+package com.game;
+
+import java.util.ArrayList;
+
+import com.game.logic.Player;
+
+public class Platform {
+	ArrayList<Player> players=new ArrayList<Player>();
+	Platform(nPlayer)
+}

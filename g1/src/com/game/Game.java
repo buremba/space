@@ -12,6 +12,8 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.game.logic.Roket;
+import com.game.logic.World;
 
 public class Game implements ApplicationListener,InputProcessor {
 	Texture texture;	
@@ -25,17 +27,25 @@ public class Game implements ApplicationListener,InputProcessor {
 	private Vector2 touchpoint;
 	Boolean touchDown=false;
 	Line ln;
+	Roket rkt=null;
 	
+	String tagTurn="uçak1";
+	World world;
 	int f=0;
 	@Override
 	public void create() {
 		Gdx.input.setInputProcessor(this);
-		texture = new Texture(Gdx.files.internal("data/sprites.png"));
-		ie=new ImageElement(new Vector2(100,100),new Vector2(127,114),new TextureRegion(texture,0,130,127,114));
-		ie.tag="uçak";
 		rlist=new RenderList();
-		rlist.addObject(ie);
+		texture = new Texture(Gdx.files.internal("data/sprites.png"));
 		
+		ie=new ImageElement(new Vector2(100,100),new Vector2(127,114),new TextureRegion(texture,0,130,127,114));
+		ie.tag="uçak1";
+		rlist.addObject(ie);
+
+		ie=new ImageElement(new Vector2(100,200),new Vector2(127,114),new TextureRegion(texture,0,130,127,114));
+		ie.tag="uçak2";
+		rlist.addObject(ie);
+	
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		glViewport = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		touchpoint = new Vector2();
@@ -44,7 +54,7 @@ public class Game implements ApplicationListener,InputProcessor {
 		ln.visible=true;
 		ln.setLineWidth(5);
 		s=new SpriteBatch();
-		//rlist.addObject(ln);
+		world=new World(3,new Vector2(Gdx.graphics.getWidth(),Gdx.graphics.getHeight()));
 	}
 	@Override
 	public void render() {		
@@ -53,18 +63,16 @@ public class Game implements ApplicationListener,InputProcessor {
 			GL10 gl = Gdx.graphics.getGL10();
 			gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 			gl.glEnable(GL10.GL_LINEAR);
-
 			gl.glViewport((int) glViewport.x, (int) glViewport.y, (int) glViewport.width, (int) glViewport.height);
-
 			cam.update();
 			cam.apply(gl);
-			/*cam.position.x=f;
-			f++;*/
+
 			rlist.Draw(cam);
+			//world.getPlayers().Draw(cam);
 			ln.visible=touchDown;
 			ln.Draw(s);
 		}
-		//Gdx.graphics.getGL10().glFlush();	
+		Gdx.graphics.getGL10().glFlush();	
 	}
 	@Override
 	public boolean touchDown(int x, int y, int arg2, int arg3) {
@@ -72,7 +80,8 @@ public class Game implements ApplicationListener,InputProcessor {
 		cam.unproject(touchpointv3);
 		touchpoint.x = touchpointv3.x;
 		touchpoint.y	= touchpointv3.y;
-		if(Math.hypot(100-touchpoint.x, 100-touchpoint.y)<100)
+		Drawable player=rlist.getObject(tagTurn);
+		if(Math.hypot(player.position.x+player.dim.x/2-touchpoint.x, player.position.y+player.dim.y/2-touchpoint.y)<100)
 		{
 			touchDown=true;
 		}
@@ -86,15 +95,16 @@ public class Game implements ApplicationListener,InputProcessor {
 		touchpoint.x = touchpointv3.x;
 		touchpoint.y	= touchpointv3.y;
 		ln.setPos2(touchpoint);
+		Drawable player=rlist.getObject(tagTurn);
 		
 		double angle=0;
-		double cosx=163-touchpoint.x;
-		double sinx=157-touchpoint.y;
+		double cosx=player.position.x+player.dim.x/2-touchpoint.x;
+		double sinx=player.position.y+player.dim.y/2-touchpoint.y;
 		angle=Math.atan2(sinx, cosx);
 		angle=angle*180/Math.PI;
 
 		angle+=180;
-		rlist.getObject("uçak").angle=(float) angle;
+		player.angle=(float) angle;
 		return false;
 	}
 
@@ -107,6 +117,10 @@ public class Game implements ApplicationListener,InputProcessor {
 	@Override
 	public boolean touchUp(int arg0, int arg1, int arg2, int arg3) {
 		touchDown=false;
+		tagTurn=(tagTurn=="uçak1"?"uçak2":"uçak1");
+		ImageElement player=(ImageElement) rlist.getObject(tagTurn);
+		ln.setPos1(player.getCenterPos());
+		
 		return false;
 	}
 	@Override public void resize(int arg0, int arg1) {	}

@@ -53,4 +53,8 @@ public class ImageElement extends Drawable {
 			s.draw(texture,position.x,position.y,dim.x/2,dim.y/2,  dim.x, dim.y, 1, 1, angle); 
 		}	
 	}
+	public Vector2 getCenterPos()
+	{
+		return new Vector2(position.x+dim.x/2,position.y+dim.y/2);
+	}
 }
