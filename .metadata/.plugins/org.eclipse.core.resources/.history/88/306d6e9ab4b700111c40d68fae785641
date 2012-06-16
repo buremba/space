@@ -19,7 +19,7 @@ public class Game implements ApplicationListener,InputProcessor {
 	Texture texture;	
 	RenderList rlist;
 	SpriteBatch s;
-	ImageElement ie,roket,gezegen;
+	ImageElement ie,roket;
 	Vector2 speed;
 	
 	private OrthographicCamera cam;
@@ -53,28 +53,12 @@ public class Game implements ApplicationListener,InputProcessor {
 		roket=new ImageElement( 
 				new Vector2(cpos.x-30,cpos.y-20),
 				new Vector2(60,40),new TextureRegion(texture,148,124,161,125));
-		gezegen=new ImageElement( 
-				new Vector2(150,150),
-				new Vector2(100,100),new TextureRegion(texture,151,0,126,124));
 		speed=new Vector2(0,0);
-		
 	}
 	@Override
 	public void render() {		
 		if(Gdx.graphics.getDeltaTime()>1/30)
 		{
-			///
-			float angle=(float) Math.atan2(speed.y, speed.x);
-			angle=(float) Math.toDegrees(angle);
-			roket.angle=angle+180;
-			roket.position.x-=speed.x;
-			roket.position.y-=speed.y;
-			float cosx=roket.position.x-gezegen.position.x;
-			float sinx=roket.position.y-gezegen.position.y;
-			float hip=(float) Math.hypot(cosx, sinx);
-			speed.x+=cosx*75/(hip*hip);
-			speed.y+=sinx*75/(hip*hip);
-			///
 			GL10 gl = Gdx.graphics.getGL10();
 			gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 			gl.glEnable(GL10.GL_LINEAR);
@@ -82,7 +66,9 @@ public class Game implements ApplicationListener,InputProcessor {
 			cam.update();
 			cam.apply(gl);
 			
-			s.setProjectionMatrix(cam.combined);			
+			s.setProjectionMatrix(cam.combined);
+			roket.position.x-=speed.x;
+			roket.position.y-=speed.y;			
 			s.begin();
 			for(int i=0; i<world.getPlayers().list.size(); i++)
 			{
@@ -90,20 +76,12 @@ public class Game implements ApplicationListener,InputProcessor {
 			}
 			ie.Draw(s);
 			roket.Draw(s);
-			gezegen.Draw(s);
 			s.end();
-			float pixdf=0;
 			if(roket.position.y>Gdx.graphics.getHeight())
 			{
-				pixdf=roket.position.y-400;
-				cam.zoom=1+pixdf/400;
-				cam.position.y=roket.position.y-200;
-			}
-			else if(roket.position.y<Gdx.graphics.getHeight())
-			{
-				pixdf=400-roket.position.y;
-				cam.zoom=1+pixdf/400;
-				cam.position.y=roket.position.y+200;
+				float pixdf=roket.position.y-Gdx.graphics.getHeight();
+				cam.zoom+=pixdf/Gdx.graphics.getHeight();
+				System.out.println(Gdx.graphics.getHeight());
 			}
 			ln.visible=touchDown;
 			ln.Draw(s);

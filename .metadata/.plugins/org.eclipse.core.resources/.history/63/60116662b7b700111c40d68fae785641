@@ -92,19 +92,13 @@ public class Game implements ApplicationListener,InputProcessor {
 			roket.Draw(s);
 			gezegen.Draw(s);
 			s.end();
-			float pixdf=0;
 			if(roket.position.y>Gdx.graphics.getHeight())
 			{
-				pixdf=roket.position.y-400;
-				cam.zoom=1+pixdf/400;
-				cam.position.y=roket.position.y-200;
+				float pixdf=roket.position.y-400;
+
 			}
-			else if(roket.position.y<Gdx.graphics.getHeight())
-			{
-				pixdf=400-roket.position.y;
-				cam.zoom=1+pixdf/400;
-				cam.position.y=roket.position.y+200;
-			}
+			cam.zoom=1+pixdf/400;
+			cam.position.y=roket.position.y-200;
 			ln.visible=touchDown;
 			ln.Draw(s);
 		}

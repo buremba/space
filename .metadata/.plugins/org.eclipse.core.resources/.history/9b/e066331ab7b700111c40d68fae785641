@@ -64,9 +64,7 @@ public class Game implements ApplicationListener,InputProcessor {
 		if(Gdx.graphics.getDeltaTime()>1/30)
 		{
 			///
-			float angle=(float) Math.atan2(speed.y, speed.x);
-			angle=(float) Math.toDegrees(angle);
-			roket.angle=angle+180;
+			float angle=Math.atan2(speed.y, speed.x);
 			roket.position.x-=speed.x;
 			roket.position.y-=speed.y;
 			float cosx=roket.position.x-gezegen.position.x;
@@ -92,18 +90,11 @@ public class Game implements ApplicationListener,InputProcessor {
 			roket.Draw(s);
 			gezegen.Draw(s);
 			s.end();
-			float pixdf=0;
 			if(roket.position.y>Gdx.graphics.getHeight())
 			{
-				pixdf=roket.position.y-400;
+				float pixdf=roket.position.y-400;
 				cam.zoom=1+pixdf/400;
 				cam.position.y=roket.position.y-200;
-			}
-			else if(roket.position.y<Gdx.graphics.getHeight())
-			{
-				pixdf=400-roket.position.y;
-				cam.zoom=1+pixdf/400;
-				cam.position.y=roket.position.y+200;
 			}
 			ln.visible=touchDown;
 			ln.Draw(s);
