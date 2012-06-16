@@ -24,6 +24,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.google.gson.Gson;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 
 public class Game implements ApplicationListener,InputProcessor,Runnable {
 	Rect kutu;
@@ -40,6 +42,11 @@ public class Game implements ApplicationListener,InputProcessor,Runnable {
     Gson gson=new Gson();
     static int myid=0;
     float posX=0;
+	
+	private Sound rocketSound;
+	private Sound explosionSound;
+	private Music duelMusic;
+	
     //ArrayList<Rect> diger=new ArrayList<Rect>();
     //static Hashtable diger = new Hashtable(); 
     static Map<Integer,Rect> diger=new HashMap<Integer,Rect>();
@@ -54,7 +61,22 @@ public class Game implements ApplicationListener,InputProcessor,Runnable {
 		glViewport = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		//connect();
 
+		loadSounds();
 	}
+	
+	/**
+	 * Load sounds and backround music
+	 */
+	private void loadSounds() {
+		rocketSound = Gdx.audio.newSound(Gdx.files.internal("data/rocketTakeOff.mp3"));
+		explosionSound = Gdx.audio.newSound(Gdx.files.internal("data/explode.mp3"));
+		duelMusic = Gdx.audio.newMusic(Gdx.files.internal("data/duelFates.mp3"));
+
+		// start the playback of the background music immediately
+		duelMusic.setLooping(true);
+		duelMusic.play();
+	}
+	
 	public void connect()
 	{
 		int port_number=2222;
