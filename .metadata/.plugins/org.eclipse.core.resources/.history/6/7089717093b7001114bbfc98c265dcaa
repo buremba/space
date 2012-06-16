@@ -1,0 +1,8 @@
+package com.game.logic;
+
+public class Player {
+	ImageElement ucak;
+	Player(){
+		
+	}
+}

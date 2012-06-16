@@ -2,8 +2,7 @@ package com.game;
 
 import java.util.ArrayList;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class RenderList {
@@ -18,8 +17,20 @@ public class RenderList {
 	{
 		list.add(object);
 	}
-	public void Draw()
+	public Drawable getObject(String tag)
 	{
+		for(int i=0; i<list.size(); i++)
+		{
+			if(list.get(i).tag==tag)
+			{
+				return list.get(i);
+			}
+		}
+		return null;
+	}
+	public void Draw(OrthographicCamera cam)
+	{
+		s.setProjectionMatrix(cam.combined);
 		if(list.size()>0)
 		{
 			s.begin();

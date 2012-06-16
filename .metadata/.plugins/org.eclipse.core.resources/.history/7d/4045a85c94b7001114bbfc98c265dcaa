@@ -1,0 +1,15 @@
+package com.game.logic;
+
+import com.badlogic.gdx.math.Vector2;
+import com.game.ImageElement;
+
+public class Roket extends Drawable {
+	ImageElement ie;
+	Vector2 hiz;
+	Vector2 ivme;
+	Roket(ImageElement ie,Vector2 force)
+	{
+		this.ie=ie;
+		
+	}
+}

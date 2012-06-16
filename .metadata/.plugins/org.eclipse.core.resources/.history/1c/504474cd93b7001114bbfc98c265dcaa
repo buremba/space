@@ -1,0 +1,14 @@
+package com.game.logic;
+
+import com.badlogic.gdx.math.Vector2;
+import com.game.ImageElement;
+
+public class Player {
+	ImageElement ucak;
+	Player(ImageElement ie){
+		this.ucak=ie;
+	}
+	public void roket(){
+		
+	}
+}

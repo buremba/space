@@ -1,0 +1,12 @@
+package com.game.logic;
+
+import com.badlogic.gdx.math.Vector2;
+import com.game.ImageElement;
+
+public class Roket {
+	ImageElement ie;
+	Roket(ImageElement ie,Vector2 pos,Vector2 force)
+	{
+		ie=ie;
+	}
+}

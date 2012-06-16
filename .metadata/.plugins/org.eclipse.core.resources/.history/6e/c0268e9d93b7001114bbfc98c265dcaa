@@ -1,0 +1,10 @@
+package com.game.logic;
+
+import com.game.ImageElement;
+
+public class Player {
+	ImageElement ucak;
+	Player(textureRegion tr,){
+		
+	}
+}

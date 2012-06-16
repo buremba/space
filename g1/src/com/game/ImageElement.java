@@ -37,30 +37,20 @@ public class ImageElement extends Drawable {
                                           
             mesh.setIndices(new short[] { 0, 1,2,3 });
         }
-
+        visible=true;
 	}
 	public ImageElement(Vector2 position,Vector2 dim,TextureRegion texture)
 	{
 		super(position, dim, 0, true);
 		this.texture=texture;
+		visible=true;
 	}
 	@Override
 	public void Draw(SpriteBatch s) {
 		if(sprite)
 		{
-			s.draw(texture,position.x,position.y, dim.x, dim.y);	
-		}
-		else
-		{
-			if(fill)
-			{
-				mesh.render(GL10.GL_TRIANGLES, 0, 4);
-			}
-			else
-			{
-				mesh.render(GL10.GL_LINE_LOOP, 0, 4);
-			}
-		}
-		
+			//s.draw(texture,position.x,position.y, dim.x, dim.y);
+			s.draw(texture,position.x,position.y,dim.x/2,dim.y/2,  dim.x, dim.y, 1, 1, angle); 
+		}	
 	}
 }

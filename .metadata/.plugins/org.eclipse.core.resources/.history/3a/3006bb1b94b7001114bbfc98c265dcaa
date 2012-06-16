@@ -1,0 +1,9 @@
+package com.game.logic;
+
+public class Roket {
+	ImageElement ie;
+	Roket(Vector2 pos,Vector2 force)
+	{
+		
+	}
+}
