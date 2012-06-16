@@ -17,7 +17,7 @@ public class Player extends Drawable {
 	public void Draw(SpriteBatch s) {
 		// TODO Auto-generated method stub
 		ucak.Draw(s);
-		//roket.Draw(s);
+		roket.Draw(s);
 	}
 	public void launchRocket()
 	{

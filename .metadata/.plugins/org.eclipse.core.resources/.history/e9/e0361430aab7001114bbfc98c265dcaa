@@ -22,10 +22,10 @@ public class World {
 		float derFark=360/playerCount;
 		for(int i=0; i<playerCount; i++)
 		{
-			float posx=(float) (dim.x/2+Math.cos(i*derFark*Math.PI/180)*50);
-			float posy=(float) (Gdx.graphics.getHeight()-dim.y/2+Math.sin(i*derFark*Math.PI/180)*50);
+			float posx=(float) (dim.x/2+Math.cos(i*derFark*Math.PI/180)*dim.x*100);
+			float posy=(float) (dim.y/2+Math.sin(i*derFark*Math.PI/180)*dim.y*100);
 			players.addObject(
-					new ImageElement(new Vector2(posx,posy),new Vector2(127,114),new TextureRegion(texture,0,130,127,114)));
+					new ImageElement(new Vector2(100,100),new Vector2(127,114),new TextureRegion(texture,0,130,127,114)));
 
 		}
 	}

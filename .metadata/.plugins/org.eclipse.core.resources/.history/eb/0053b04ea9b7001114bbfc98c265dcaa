@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 public class RenderList {
-	public ArrayList<Drawable> list;
+	ArrayList<Drawable> list;
 	SpriteBatch s;
 	public RenderList()
 	{

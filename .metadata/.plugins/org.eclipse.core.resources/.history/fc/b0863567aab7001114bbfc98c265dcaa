@@ -23,7 +23,7 @@ public class World {
 		for(int i=0; i<playerCount; i++)
 		{
 			float posx=(float) (dim.x/2+Math.cos(i*derFark*Math.PI/180)*50);
-			float posy=(float) (Gdx.graphics.getHeight()-dim.y/2+Math.sin(i*derFark*Math.PI/180)*50);
+			float posy=(float) (dim.y/2+Math.sin(i*derFark*Math.PI/180)*50);
 			players.addObject(
 					new ImageElement(new Vector2(posx,posy),new Vector2(127,114),new TextureRegion(texture,0,130,127,114)));
 

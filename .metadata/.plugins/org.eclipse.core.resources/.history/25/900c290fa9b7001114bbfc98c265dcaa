@@ -80,12 +80,8 @@ public class Game implements ApplicationListener,InputProcessor {
 		cam.unproject(touchpointv3);
 		touchpoint.x = touchpointv3.x;
 		touchpoint.y	= touchpointv3.y;
-		Drawable player=world.getPlayer();
-		System.out.println(player);
-		if(
-				Math.hypot(
-						player.position.x+player.dim.x/2-touchpoint.x, 
-						player.position.y+player.dim.y/2-touchpoint.y)<100)
+		Drawable player=world.getPlayers().getObject(tagTurn);
+		if(Math.hypot(player.position.x+player.dim.x/2-touchpoint.x, player.position.y+player.dim.y/2-touchpoint.y)<100)
 		{
 			touchDown=true;
 		}
@@ -99,7 +95,7 @@ public class Game implements ApplicationListener,InputProcessor {
 		touchpoint.x = touchpointv3.x;
 		touchpoint.y	= touchpointv3.y;
 		ln.setPos2(touchpoint);
-		Drawable player=world.getPlayer();
+		Drawable player=rlist.getObject(tagTurn);
 		
 		double angle=0;
 		double cosx=player.position.x+player.dim.x/2-touchpoint.x;
@@ -121,8 +117,8 @@ public class Game implements ApplicationListener,InputProcessor {
 	@Override
 	public boolean touchUp(int arg0, int arg1, int arg2, int arg3) {
 		touchDown=false;
-		world.passPlayer();
-		ImageElement player=(ImageElement) world.getPlayer();
+		tagTurn=(tagTurn=="uçak1"?"uçak2":"uçak1");
+		ImageElement player=(ImageElement) rlist.getObject(tagTurn);
 		ln.setPos1(player.getCenterPos());
 		
 		return false;
