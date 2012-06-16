@@ -1,0 +1,7 @@
+package com.game;
+
+import com.badlogic.gdx.ApplicationListener;
+
+public class Game implements ApplicationListener {
+
+}
