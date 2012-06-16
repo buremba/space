@@ -1,0 +1,49 @@
+package com.game;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.GL10;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Vector2;
+
+public class ImageElement extends Drawable {
+	TextureRegion textureRegion;
+	ImageElement(TextureRegion textureRegion,Vector2 pos,Vector2 dim){
+		this.textureRegion=textureRegion;
+		this.position=pos;
+		this.dim=dim;
+		this.angle=0;
+	}
+	ImageElement(TextureRegion textureRegion,Vector2 pos,Vector2 dim,int angle){
+		this.textureRegion=textureRegion;
+		this.position=pos;
+		this.dim=dim;
+		this.angle=angle;
+	}
+	@Override
+	public void Draw(SpriteBatch s) {
+		s.draw(textureRegion,position.x, position.y, 20, 20);
+		if(Gdx.graphics.getDeltaTime()>1/30)
+		{
+	        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+	        Gdx.graphics.getGL10().glEnable(GL10.GL_TEXTURE_2D);
+			s.begin();
+			for(int i=0; i<stack.size(); i++)
+			{
+				if(stack.get(i).sprite)
+				{
+					stack.get(i).Draw(s);
+				}
+			}
+			s.end();
+			for(int i=0; i<stack.size(); i++)
+			{
+				if(!stack.get(i).sprite)
+				{
+					stack.get(i).Draw(s);
+				}
+			}
+		}
+	}
+	
+}

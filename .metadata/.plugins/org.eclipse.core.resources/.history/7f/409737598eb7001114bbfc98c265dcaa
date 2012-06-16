@@ -1,0 +1,45 @@
+package com.game;
+
+import java.util.ArrayList;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+public class RenderList {
+	ArrayList<Drawable> list;
+	SpriteBatch s;
+	RenderList()
+	{
+		s=new SpriteBatch();
+		list=new ArrayList<Drawable>();
+	}
+	public void addObject(Drawable object)
+	{
+		s.begin();
+		list.add(object);
+		s.end();
+	}
+	public void Draw()
+	{
+		if(Gdx.graphics.getDeltaTime()>1/30)
+		{
+	        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+	        Gdx.graphics.getGL10().glEnable(GL10.GL_TEXTURE_2D);
+			s.begin();
+			for(int i=0; i<stack.size(); i++)
+			{
+				if(stack.get(i).sprite)
+				{
+					stack.get(i).Draw(s);
+				}
+			}
+			s.end();
+			for(int i=0; i<stack.size(); i++)
+			{
+				if(!stack.get(i).sprite)
+				{
+					stack.get(i).Draw(s);
+				}
+			}
+		}
+	}
+}

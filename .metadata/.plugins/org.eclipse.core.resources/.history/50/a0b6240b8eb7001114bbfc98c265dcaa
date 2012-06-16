@@ -1,0 +1,11 @@
+package com.game;
+
+import java.util.ArrayList;
+
+public class RenderList {
+	ArrayList<Drawable> list=new ArrayList<Drawable>();
+	RenderList()
+	{
+		list=new ArrayList<Drawable>();
+	}
+}

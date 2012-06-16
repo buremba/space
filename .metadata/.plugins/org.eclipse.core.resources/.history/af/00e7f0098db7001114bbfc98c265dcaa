@@ -1,0 +1,6 @@
+package com.game;
+
+public class ImageElement extends Drawable {
+	TextureRegion textureRegion;
+	
+}

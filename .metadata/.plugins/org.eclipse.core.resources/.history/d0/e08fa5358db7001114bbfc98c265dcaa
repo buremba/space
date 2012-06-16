@@ -1,0 +1,17 @@
+package com.game;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
+public class ImageElement extends Drawable {
+	TextureRegion textureRegion;
+	ImageElement(){
+		
+	}
+	@Override
+	public void Draw(SpriteBatch s) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+}

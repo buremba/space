@@ -1,0 +1,25 @@
+package com.game;
+
+import java.util.ArrayList;
+
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+
+public class RenderList {
+	ArrayList<Drawable> list;
+	SpriteBatch s;
+	RenderList()
+	{
+		s=new SpriteBatch();
+		list=new ArrayList<Drawable>();
+	}
+	public void addObject(Drawable object)
+	{
+		s.begin();
+		list.add(object);
+		s.end();
+	}
+	public void Draw()
+	{
+		
+	}
+}
