@@ -19,7 +19,9 @@ public class Game implements ApplicationListener,InputProcessor {
 	Texture texture;	
 	RenderList rlist;
 	SpriteBatch s;
-	ImageElement ie;
+	ImageElement ie,roket;
+	Vector2 speed;
+	
 	private OrthographicCamera cam;
 	private Rectangle glViewport;
 	
@@ -27,34 +29,31 @@ public class Game implements ApplicationListener,InputProcessor {
 	private Vector2 touchpoint;
 	Boolean touchDown=false;
 	Line ln;
-	Roket rkt=null;
-	
-	String tagTurn="uçak1";
+
 	World world;
 	int f=0;
 	@Override
 	public void create() {
 		Gdx.input.setInputProcessor(this);
-		rlist=new RenderList();
 		texture = new Texture(Gdx.files.internal("data/sprites.png"));
-		
-		ie=new ImageElement(new Vector2(100,100),new Vector2(127,114),new TextureRegion(texture,0,130,127,114));
-		ie.tag="uçak1";
-		rlist.addObject(ie);
-
-		ie=new ImageElement(new Vector2(100,200),new Vector2(127,114),new TextureRegion(texture,0,130,127,114));
-		ie.tag="uçak2";
-		rlist.addObject(ie);
 	
 		cam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		glViewport = new Rectangle(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		touchpoint = new Vector2();
 		cam.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		ln=new Line(new Vector2(163,157),new Vector2(0,0),new Vector3(255,0,0));
+		world=new World(3,new Vector2(Gdx.graphics.getWidth(),Gdx.graphics.getHeight()));
+		ln=new Line(((ImageElement)world.getPlayer()).getCenterPos(),new Vector2(0,0),new Vector3(255,0,0));
 		ln.visible=true;
 		ln.setLineWidth(5);
 		s=new SpriteBatch();
-		world=new World(3,new Vector2(Gdx.graphics.getWidth(),Gdx.graphics.getHeight()));
+		Vector2 cpos=((ImageElement)world.getPlayer()).getCenterPos();
+		ie=new ImageElement( 
+				new Vector2(cpos.x-60,cpos.y-60),
+				new Vector2(120,120),new TextureRegion(texture,309,0,120,120));
+		roket=new ImageElement( 
+				new Vector2(cpos.x-30,cpos.y-20),
+				new Vector2(60,40),new TextureRegion(texture,148,124,161,125));
+		speed=new Vector2(0,0);
 	}
 	@Override
 	public void render() {		
@@ -66,9 +65,18 @@ public class Game implements ApplicationListener,InputProcessor {
 			gl.glViewport((int) glViewport.x, (int) glViewport.y, (int) glViewport.width, (int) glViewport.height);
 			cam.update();
 			cam.apply(gl);
-
-			//rlist.Draw(cam);
-			world.getPlayers().Draw(cam);
+			
+			s.setProjectionMatrix(cam.combined);
+			roket.position.x-=speed.x;
+			roket.position.y-=speed.y;			
+			s.begin();
+			for(int i=0; i<world.getPlayers().list.size(); i++)
+			{
+				world.getPlayers().list.get(i).Draw(s);
+			}
+			ie.Draw(s);
+			roket.Draw(s);
+			s.end();
 			ln.visible=touchDown;
 			ln.Draw(s);
 		}
@@ -81,13 +89,14 @@ public class Game implements ApplicationListener,InputProcessor {
 		touchpoint.x = touchpointv3.x;
 		touchpoint.y	= touchpointv3.y;
 		Drawable player=world.getPlayer();
-		System.out.println(player);
 		if(
 				Math.hypot(
 						player.position.x+player.dim.x/2-touchpoint.x, 
-						player.position.y+player.dim.y/2-touchpoint.y)<100)
+						player.position.y+player.dim.y/2-touchpoint.y)<200)
 		{
 			touchDown=true;
+			ln.setPos2(touchpoint);
+			speed=new Vector2(0,0);
 		}
 		return false;
 	}
@@ -98,6 +107,8 @@ public class Game implements ApplicationListener,InputProcessor {
 		cam.unproject(touchpointv3);
 		touchpoint.x = touchpointv3.x;
 		touchpoint.y	= touchpointv3.y;
+		if(touchDown)
+		{
 		ln.setPos2(touchpoint);
 		Drawable player=world.getPlayer();
 		
@@ -109,6 +120,7 @@ public class Game implements ApplicationListener,InputProcessor {
 
 		angle+=180;
 		player.angle=(float) angle;
+		}
 		return false;
 	}
 
@@ -119,12 +131,31 @@ public class Game implements ApplicationListener,InputProcessor {
 	}
 
 	@Override
-	public boolean touchUp(int arg0, int arg1, int arg2, int arg3) {
+	public boolean touchUp(int x, int y, int arg2, int arg3) {
+		Vector3 touchpointv3 =new Vector3(x,y,0); //where x and y are tap inputs
+		cam.unproject(touchpointv3);
+		touchpoint.x = touchpointv3.x;
+		touchpoint.y	= touchpointv3.y;
 		touchDown=false;
-		world.passPlayer();
 		ImageElement player=(ImageElement) world.getPlayer();
-		ln.setPos1(player.getCenterPos());
 		
+		double angle=0;
+		double cosx=player.position.x+player.dim.x/2-touchpoint.x;
+		double sinx=player.position.y+player.dim.y/2-touchpoint.y;
+		angle=Math.atan2(sinx, cosx);
+		angle=angle*180/Math.PI;
+
+		angle+=180;
+		roket.position=player.getCenterPos();
+		roket.angle=(float) angle;		
+		speed.x=(float) (cosx/100);
+		speed.y=(float) (sinx/100);
+		
+		world.passPlayer();
+		player=(ImageElement) world.getPlayer();
+		ln.setPos1(player.getCenterPos());
+		Vector2 cpos=((ImageElement)world.getPlayer()).getCenterPos();
+		ie.position=new Vector2(cpos.x-60,cpos.y-60);
 		return false;
 	}
 	@Override public void resize(int arg0, int arg1) {	}

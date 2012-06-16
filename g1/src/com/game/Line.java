@@ -6,7 +6,7 @@ import com.badlogic.gdx.math.Vector3;
 public class Line extends Mesh2d {
 	private Vector2 a1,a2;
 	
-	Line(Vector2 Pos1,Vector2 Pos2,Vector3 Color)
+	public Line(Vector2 Pos1,Vector2 Pos2,Vector3 Color)
 	{
 		super(new Vector2[]{
 				new Vector2(Pos1.x,Pos1.y),

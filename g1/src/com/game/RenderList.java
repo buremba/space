@@ -30,15 +30,11 @@ public class RenderList {
 	}
 	public void Draw(OrthographicCamera cam)
 	{
-		s.setProjectionMatrix(cam.combined);
-		if(list.size()>0)
+		s.begin();
+		for(int i=0; i<list.size(); i++)
 		{
-			s.begin();
-			for(int i=0; i<list.size(); i++)
-			{
-				list.get(i).Draw(s);
-			}
-			s.end();
+			list.get(i).Draw(s);
 		}
+		s.end();
 	}
 }
