@@ -58,7 +58,7 @@ public class Game implements ApplicationListener,InputProcessor,Runnable {
 	public void connect()
 	{
 		int port_number=2222;
-        String host="192.168.1.6";
+        String host="192.168.0.10";
 	// Initialization section:
 	// Try to open a socket on a given host and port
 	// Try to open input and output streams
