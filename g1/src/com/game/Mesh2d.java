@@ -1,10 +1,6 @@
 package com.game;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -25,7 +21,7 @@ public class Mesh2d extends Drawable {
 	public float PointSize = 1, LineWidth = 1;
 
 	private Vector3 color = new Vector3(255, 255, 255);
-	private Vector2 pos, dim = new Vector2(50, 50);
+	private Vector2 pos = new Vector2(50, 50);
 	public float angle = 0;
 
 	Mesh2d() {

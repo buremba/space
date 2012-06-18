@@ -7,20 +7,27 @@ import com.game.Drawable;
 import com.game.ImageElement;
 
 public class Player extends Drawable {
-	ImageElement ucak,roket;
-	public Player(TextureRegion tr,Vector2 pos,Vector2 dim){
-		ucak=new ImageElement(pos,dim,tr);
-		ucak.tag="uçak";
-		
+	public ImageElement spaceship;
+	public boolean isActive = false;
+	TextureRegion[] spaceshipTypes = {new TextureRegion(texture,0,130,127,114)};
+	public int type;
+	
+	public Player(Vector2 pos,Vector2 dim, int type){
+		spaceship = new ImageElement(pos,dim,spaceshipTypes[type]);
+		this.position = pos;
+		this.dim = dim;
+		this.type = type;
+	}
+	public Player(Vector2 pos,Vector2 dim, int type,  boolean activeStatus){
+		this(pos, dim, type);
+		isActive = activeStatus;
+	}
+	public Player(Vector2 pos,Vector2 dim){
+		this(pos, dim, 0);
 	}
 	@Override
 	public void Draw(SpriteBatch s) {
-		// TODO Auto-generated method stub
-		ucak.Draw(s);
-		//roket.Draw(s);
+		spaceship.Draw(s);
 	}
-	public void launchRocket()
-	{
-		
-	}
+
 }

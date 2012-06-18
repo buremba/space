@@ -1,6 +1,7 @@
 package com.game.logic;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -12,18 +13,16 @@ public class Explode {
 	ImageElement[] imgs=new ImageElement[25];
 	public int animCursor=0;
 	public boolean finished=false;
+	private Sound explosionSound = Gdx.audio.newSound(Gdx.files.internal("data/bomb.wav"));
 	int geclimit=0;
+	boolean isActive = false;
 	public Explode(Vector2 pos,Vector2 dim)
 	{
 		texture = new Texture(Gdx.files.internal("data/explosion.png"));
-		for(int i=0; i<5; i++)
-		{
-			for(int j=0; j<5; j++)
-			{
-			imgs[i+j*5]=new ImageElement( 
-					pos,
-					dim,new TextureRegion(texture,i*103,j*103,101,101));
-			System.out.println("x :"+i*64+" y : "+j*64);
+		this.explosionSound.play();
+		for(int i=0; i<5; i++) {
+			for(int j=0; j<5; j++) {
+				imgs[i+j*5]=new ImageElement( pos,dim,new TextureRegion(texture,i*103,j*103,101,101));
 			}
 		}
 	}

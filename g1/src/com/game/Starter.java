@@ -9,7 +9,7 @@ public class Starter {
 	 */
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		new JoglApplication(new Game(),"pencere",800,600,false);
+		new JoglApplication(new Game(),"pencere",800,480,false);
 	}
 
 }
