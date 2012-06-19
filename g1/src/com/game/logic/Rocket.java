@@ -31,8 +31,8 @@ public class Rocket extends Drawable {
 
 	public void Draw(SpriteBatch s, World world) {
 		if(this.passPlayer) {
-			world.passPlayer();
 			this.passPlayer = false;
+			world.passPlayer();
 		}
 		
 		if (isActive) {
@@ -48,7 +48,6 @@ public class Rocket extends Drawable {
 				float hip = (float) Math.hypot(cosx, sinx);
 				if (hip < world.planets.get(i).radius) {
 					this.stop(this.image.position);
-					this.passPlayer = true;
 					break;
 				}
 				speed.x += cosx * world.planets.get(i).radius / (hip * hip);
@@ -57,7 +56,6 @@ public class Rocket extends Drawable {
 			
 			if (this.image.position.dst(world.getOrigin())>Math.hypot(Gdx.graphics.getHeight(), Gdx.graphics.getWidth())) {
 				this.stop();
-				this.passPlayer = true;
 			}
 			
 			Player currentPlayer = world.getActivePlayer();
@@ -70,7 +68,6 @@ public class Rocket extends Drawable {
 					if (hip2 < 50) {
 						this.stop(this.image.position);
 						world.getPlayers().remove(i);
-						this.passPlayer = true;
 						break;
 					}
 				}
@@ -93,11 +90,13 @@ public class Rocket extends Drawable {
 	
 	public void stop() {
 		this.isActive = false;
+		this.passPlayer = true;
 	}
 	
 	public void stop(Vector2 conflictPoint) {
-		explosion = new Explode(conflictPoint, new Vector2(50, 50));
 		this.isActive = false;
+		explosion = new Explode(conflictPoint, new Vector2(50, 50));
+		this.passPlayer = true;
 	}
 	
 	public boolean checkStatus() {
@@ -124,9 +123,11 @@ class Task4Timer extends TimerTask {
 	}
 
 	public void run() {
+		if(!rocket.isActive) {
+			this.cancel();
+		}else
 		if(!rocket.checkStatus()) {
 			rocket.stop();
-			rocket.passPlayer = true;
 			this.cancel();
 		}
 	}

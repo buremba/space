@@ -13,7 +13,7 @@ public class Player extends Drawable {
 	public int type;
 	
 	public Player(Vector2 pos,Vector2 dim, int type){
-		spaceship = new ImageElement(pos,dim,spaceshipTypes[type]);
+		spaceship = new ImageElement(new Vector2(pos.x-(dim.x/2),pos.y-(dim.y/2)),dim,spaceshipTypes[type]);
 		this.position = pos;
 		this.dim = dim;
 		this.type = type;

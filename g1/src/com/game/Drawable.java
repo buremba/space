@@ -25,7 +25,7 @@ public abstract class Drawable {
 	public abstract void Draw(SpriteBatch s);
 	public Vector2 getCenterPos()
 	{
-		return new Vector2(position.x+dim.x/2,position.y+dim.y/2);
+		return new Vector2(position.x,position.y);
 	}
 	public String toString() {
 		return "[Drawable] Position: "+position.toString()+" Dimension: "+dim.toString();

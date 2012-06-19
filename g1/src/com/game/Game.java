@@ -73,15 +73,16 @@ public class Game implements ApplicationListener, InputProcessor {
 		duelMusic.play();
 	}
 	
-	public boolean passPlayer() {
+	public boolean passPlayers() {
 		world.passPlayer();
-
+		/*
 		Vector2 cpos = world.getActivePlayer().getCenterPos();
 		cam.zoom = cameraZoomBackup;
 		cam.position.x = cpos.x;
 		cam.position.y = cpos.y;
 		world.rocket.speed.x = 0;
 		world.rocket.speed.y = 0;
+		*/
 		return true;
 	}
 

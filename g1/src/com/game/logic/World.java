@@ -1,7 +1,6 @@
 package com.game.logic;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -27,14 +26,14 @@ public class World {
 		for(int i=0; i<playerCount; i++)
 		{
 			float der=(float) Math.toRadians(i*derFark);
-			float posx=(float) (dim.x/2+Math.cos(der)*(dim.x-dim.x*70/100+50)-63);
-			float posy=(float) (dim.y/2+Math.sin(der)*(dim.y-dim.y*70/100+50)-57);
+			float posx=(float) (dim.x/2+Math.cos(der)*(dim.x-dim.x*70/100+50));
+			float posy=(float) (dim.y/2+Math.sin(der)*(dim.y-dim.y*70/100+50));
 			Player player = new Player(new Vector2(posx,posy), new Vector2(64,56));
 			players.add(player);
 		}
 		this.backgroundGenerator();
 		this.planetGenerator(1);
-		pointer = new ImageElement( this.players.get(cursorTurn).position, new Vector2(120,120),new TextureRegion(new Texture(Gdx.files.internal("data/sprites.png")),309,0,120,120));
+		pointer = new ImageElement( new Vector2(this.players.get(cursorTurn).spaceship.position.x-30,this.players.get(cursorTurn).spaceship.position.y-30), new Vector2(120,120),new TextureRegion(new Texture(Gdx.files.internal("data/sprites.png")),309,0,120,120));
 		
 	}
 	public ArrayList<Player> getPlayers() {
@@ -60,32 +59,32 @@ public class World {
 	}
 	public void planetGenerator(int planetCount) {
 		final float MAX_PLANET_RADIUS = Math.min(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())/5;
-		final float MIN_PLANET_RADIUS = Math.min(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())/25;
+		final float MIN_PLANET_RADIUS = Math.min(Gdx.graphics.getWidth(), Gdx.graphics.getHeight())/10;
 		
-		planets.add(new Planet(this.getOrigin(), (float) ((float) MIN_PLANET_RADIUS+(Math.random()*MAX_PLANET_RADIUS-MIN_PLANET_RADIUS)), (int) Math.random()));
+		planets.add(new Planet(this.getOrigin(), (float) ((float) MIN_PLANET_RADIUS+Math.abs(Math.random()*MAX_PLANET_RADIUS-MIN_PLANET_RADIUS)), (int) Math.random()));
 		
 		while(planets.size()<planetCount) {
 			Vector2 temporigin = new Vector2((float) Math.random()*Gdx.graphics.getWidth(), (float) Math.random()*Gdx.graphics.getHeight());
+			float tempradius = (float) ((float) MIN_PLANET_RADIUS+Math.abs(Math.random()*MAX_PLANET_RADIUS-MIN_PLANET_RADIUS));
+			System.out.println(tempradius);
 			boolean conflict= false;
-			
-			Iterator<Planet> itr = planets.iterator();
-		    while (itr.hasNext()) {
-		      Planet element = itr.next();
-		      if(element.origin.x-element.radius<temporigin.x && element.origin.x+element.radius>temporigin.x && 
-		    		  element.origin.y-element.radius<temporigin.y && element.origin.y+element.radius<temporigin.y) {
-		    	  conflict = true;
-		    	  break;
-		      }
-		      if(!conflict) {
-		    	  planets.add(new Planet(temporigin, (float) ((float) MIN_PLANET_RADIUS+(Math.random()*MAX_PLANET_RADIUS-MIN_PLANET_RADIUS)), (int) Math.random()));
-		      }
+			for(int i=0; i<planets.size(); i++) {
+				Planet element = planets.get(i);
+				if((element.origin.x-element.radius<temporigin.x-tempradius && element.origin.x+element.radius>temporigin.x+tempradius) || 
+					(element.origin.y-element.radius<temporigin.y-tempradius && element.origin.y+element.radius<temporigin.y+tempradius)) {
+					conflict = true;
+					break;
+				}
+		    }
+		    if(!conflict) {
+		    	planets.add(new Planet(temporigin, tempradius, (int) Math.random()));
 		    }
 		}
 	}
 	public void passPlayer()
 	{
 		cursorTurn=(cursorTurn+1)%players.size();
-		this.pointer.position = this.players.get(cursorTurn).position;
+		this.pointer.position = new Vector2(this.players.get(cursorTurn).spaceship.position.x-30,this.players.get(cursorTurn).spaceship.position.y-30);
 	}
 	public void backgroundGenerator() {
 		background = new ImageElement(

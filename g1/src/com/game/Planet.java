@@ -11,7 +11,7 @@ public class Planet extends Drawable{
 	private ImageElement image;
 
 	public Planet(Vector2 origin, float radius, int type) {
-		image = new ImageElement(origin,new Vector2(radius*2, radius*2), new TextureRegion(super.texture, 151, 0, 126, 124));
+		image = new ImageElement(new Vector2(origin.x-radius,origin.y-radius),new Vector2(radius*2, radius*2), new TextureRegion(super.texture, 151, 0, 126, 124));
 		this.origin = origin;
 		this.radius = radius;
 		this.type = type;
