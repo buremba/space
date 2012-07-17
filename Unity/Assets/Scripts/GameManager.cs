@@ -27,6 +27,8 @@ public class GameManager : MonoBehaviour {
 	/* skin */
 	public GUISkin skin;
 	
+	private bool showMisilleSelect=true;
+	
 	/* array of missile that can useable for players */
 	public GameObject [] missiles;
 	
@@ -64,25 +66,43 @@ public class GameManager : MonoBehaviour {
 		
 					
 		int width= 400;
-		int height=100;
+		int height=150;
+		
+		int insideWidth=width-40;
+		
 		if(playerTurn){
 			if(player.GetComponent<Ship>().missile==null){
-				GUI.Label(new Rect(Screen.width/2-width/4, Screen.height/2, width/2, 50), "Missile didnt selected", "warning");
+				
+				
+				GUI.Window(0, new Rect(Screen.width/2-width/2, Screen.height/2, width, 80), this.misilleWarning, "");
 			}
 			
 			/*GUI.Label(new Rect(10, 40, 100, 20), "Players Turn");*/
-
-			GUI.Window(1, new Rect (Screen.width/2-width/2 , 10 , width, height+10), this.missileSelectMenu, "Select Missile");
 			
+			if(showMisilleSelect)
+				GUI.Window(1, new Rect (Screen.width/2-width/2 , 10 , width, height+10), this.missileSelectMenu, "");
+			else{
+				width-=40;
+				if(GUI.Button(new Rect (Screen.width/2-insideWidth/2 , 30 , insideWidth, 40), "MISSILE SELECT")){
+					showMisilleSelect=true;
+				}
+			}	
 		}
 		else{
-			GUI.Window(1, new Rect (Screen.width/2-width/2 , 10 , width, height+10), this.cancelMenu, "Cancel Missile");
+			if(GUI.Button(new Rect (Screen.width/2-insideWidth/2 , 30 , insideWidth, 40), "CANCEL MISILLE")){
+				cancelMissile();
+			}
+			//GUI.Window(1, new Rect (Screen.width/2-width/2 , 10 , width, height+10), this.cancelMenu, "");
 		}
 	}
 	
 	public void missileSelectMenu(int id){
 		GUILayout.BeginVertical();
-		GUILayout.Space(20);
+		GUILayout.Space(10);
+		
+		if(GUILayout.Button("MISSILE SELECT")){
+			showMisilleSelect=false;
+		}
 		
 		GUILayout.BeginHorizontal();
 		foreach( GameObject missile in missiles){
@@ -94,16 +114,11 @@ public class GameManager : MonoBehaviour {
 		GUILayout.EndVertical();
 	}
 	
-	public void cancelMenu(int id){
+	public void misilleWarning(int id){
 		GUILayout.BeginVertical();
-		GUILayout.Space(20);
+		GUILayout.Space(10);
 		
-		GUILayout.BeginHorizontal();
-		if (GUILayout.Button( "Cancel Missile" )){
-			cancelMissile();
-		}
-
-		GUILayout.EndHorizontal();
+		GUILayout.Label("Missile didnt selected", "Warning");
 		GUILayout.EndVertical();
 	}
 	

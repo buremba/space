@@ -18,24 +18,37 @@ public class Menu : MonoBehaviour {
 		GUI.skin=skin;
 		
 		int width= 400;
-		int height=250;
+		int height=240;
 		GUI.Window(1, new Rect (Screen.width/2-width/2 , Screen.height/2-height/2, width, height), this.mainMenu, "");
 	}
 	
 	public void mainMenu(int id){
 		GUILayout.BeginVertical();
+		
 		GUILayout.Space(10);
+		GUILayout.Label("MAIN MENU");
 		
-		GUILayout.Label("Main Menu");
 		
-		if (GUILayout.Button("Start")){
+		GUILayout.BeginHorizontal();
+		
+		if (GUILayout.Button("NEW GAME")){
 			Application.LoadLevel("main");
 		}
 		
-		if (GUILayout.Button("Exit")){
-			Application.Quit();
+		if (GUILayout.Button("LOAD")){
+			//
 		}
 
+		GUILayout.EndHorizontal();
+		
+		if (GUILayout.Button("QUIT")){
+			Application.Quit();
+		}
+		
+		if (GUILayout.Button("ABOUT")){
+			Application.Quit();
+		}
+		
 		GUILayout.EndVertical();
 	}
 }
